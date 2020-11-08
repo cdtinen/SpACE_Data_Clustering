@@ -86,7 +86,7 @@ def plot2D(dataset, clusters, dataobjects, embedded=False):
         desc_index = desc_df.loc[desc_df['descriptor'] == 'Class'].index[0]
         value = desc_df.iloc[desc_index, 1].strip(" ")
         descriptive[j]['class'] = value
-        if 'Subclass' in desc_df['descriptor'].values and desc_df.iloc[desc_index, 1].strip(" ") != 'None':
+        if 'Subclass' in desc_df['descriptor'].values:
             desc_index = desc_df.loc[desc_df['descriptor'] == 'Subclass'].index[0]
             value = desc_df.iloc[desc_index, 1].strip(" ")
             descriptive[j]['subclass'] = value
@@ -96,7 +96,7 @@ def plot2D(dataset, clusters, dataobjects, embedded=False):
         string = ""
         string += 'Type: ' + i['type'] + '\n'
         string += 'Class: ' + i['class'] + '\n'
-        if 'subclass' in i:
+        if 'subclass' in i and i['subclass'] != 'None':
             string += 'Subclass: ' + i['subclass']
         strings.append(string)
 

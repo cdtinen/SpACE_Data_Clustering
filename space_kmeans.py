@@ -5,7 +5,6 @@ Currently performs Kmeans, calculates the composition of Kmeans clusters, and pl
 """
 from sklearn.cluster import KMeans
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
@@ -63,12 +62,7 @@ def plot3D(dataset, clusters, dataobjects, embedded=False, ):
 
 
 def plot2D(dataset, clusters, dataobjects, embedded=False):
-    """This function plots clusters and cluster centers in 2D.
-    If embedded is False, the the plot is displayed in a standalone
-    modal window and the function returns None.
-    If embedded is True, the function returns a Figure object
-    to be displayed on a FigureCanvasTkAgg embedded in the GUI."""
-    # figure, axes = plt.subplots()
+    """This function plots clusters and cluster centers in 2D with Plotly."""
     cx = []
     cy = []
     clusters = clusters.fit(dataset)  # refit to reduced data for plotting
@@ -100,10 +94,6 @@ def plot2D(dataset, clusters, dataobjects, embedded=False):
             string += 'Subclass: ' + i['subclass']
         strings.append(string)
 
-    """
-    axes.scatter(x=dataset[0], y=dataset[1], c=clusters.labels_, cmap="tab20")
-    axes.scatter(x=cx, y=cy, marker="x", color="black", s=50)
-    """
     fig = go.Figure(data=go.Scattergl(x=dataset[0], y=dataset[1],
                                       name="",
                                       mode='markers',
@@ -116,6 +106,7 @@ def plot2D(dataset, clusters, dataobjects, embedded=False):
                                       ),
                                       text=strings
                                       ))
+    # Add centers
     fig.add_trace(
         go.Scattergl(x=cx, y=cy, mode='markers', text=clusters.labels_, showlegend=False, name='Cluster Center',
                      marker=dict(size=10, symbol='x-dot', color='black')))

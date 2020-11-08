@@ -6,6 +6,7 @@ Currently performs Kmeans, calculates the composition of Kmeans clusters, and pl
 from sklearn.cluster import KMeans
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
 
 def do_Kmeans(num_clusters, dataset):
@@ -25,7 +26,7 @@ def calculate_composition(km, num_clusters, data_objects, sort_category):
     for i in range(len(data_objects)):
         # The most complicated line of code I have ever written in my entire life.  Basically it just accesses the
         # value where the descriptor = sort_category
-        category = data_objects[i].descriptive.\
+        category = data_objects[i].descriptive. \
             loc[data_objects[i].descriptive['descriptor'] == sort_category, 'value'].iloc(0)[0].upper()
         if not (category in comp.columns):
             comp.insert(0, category, 0)
@@ -66,17 +67,38 @@ def plot2D(dataset, clusters, embedded=False):
     modal window and the function returns None.
     If embedded is True, the function returns a Figure object
     to be displayed on a FigureCanvasTkAgg embedded in the GUI."""
-    figure, axes = plt.subplots()
+    # figure, axes = plt.subplots()
     cx = []
     cy = []
     clusters = clusters.fit(dataset)  # refit to reduced data for plotting
     for i in clusters.cluster_centers_:
         cx.append(i[0])
         cy.append(i[1])
+    """
     axes.scatter(x=dataset[0], y=dataset[1], c=clusters.labels_, cmap="tab20")
     axes.scatter(x=cx, y=cy, marker="x", color="black", s=50)
+    """
+    fig = go.Figure(data=go.Scattergl(x=dataset[0], y=dataset[1],
+                                      name="",
+                                      mode='markers',
+                                      showlegend=False,
+                                      marker=dict(
+                                          size=8,
+                                          color=clusters.labels_,
+                                          colorscale='Portland',
+                                          showscale=True
+                                      ),
+                                      ))
+    fig.add_trace(
+        go.Scattergl(x=cx, y=cy, mode='markers', text=clusters.labels_, showlegend=False, name='Cluster Center',
+                     marker=dict(size=10, symbol='x-dot', color='black')))
+    fig.show()
+
+    """
     if embedded:
-        return figure
+        return fig
     else:
-        plt.show()
+        fig.show()
         return None
+    """
+    return None

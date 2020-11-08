@@ -409,7 +409,7 @@ class SpaceApp(tk.Frame):
             self.log("PCA reducing data to %s dimensions..." % dimensions)
             plot_dataset = dataops.pca(self._dataset, dimensions)
         self.log("Plotting...")
-        figure = plot(plot_dataset, self._k_clusters, embedded=True)
+        figure = plot(plot_dataset, self._k_clusters, self._data_objs, embedded=True)
         self._kmeans_viz_panel.display_figure(figure)
         self.log("-- End K-means plotting --")
 

@@ -5,6 +5,7 @@ Currently performs Kmeans, calculates the composition of Kmeans clusters, and pl
 """
 from sklearn.cluster import KMeans
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
@@ -37,7 +38,7 @@ def calculate_composition(km, num_clusters, data_objects, sort_category):
     return comp
 
 
-def plot3D(dataset, clusters, embedded=False):
+def plot3D(dataset, clusters, dataobjects, embedded=False, ):
     """This function plots clusters and cluster centers in 3D.
     If embedded is False, the the plot is displayed in a standalone
     modal window and the function returns None.
@@ -61,7 +62,7 @@ def plot3D(dataset, clusters, embedded=False):
         return None
 
 
-def plot2D(dataset, clusters, embedded=False):
+def plot2D(dataset, clusters, dataobjects, embedded=False):
     """This function plots clusters and cluster centers in 2D.
     If embedded is False, the the plot is displayed in a standalone
     modal window and the function returns None.
@@ -74,6 +75,31 @@ def plot2D(dataset, clusters, embedded=False):
     for i in clusters.cluster_centers_:
         cx.append(i[0])
         cy.append(i[1])
+
+    descriptive = [{} for i in range(0, len(dataobjects))]
+    for dataobject in dataobjects:
+        j = dataobjects.index(dataobject)
+        desc_df = dataobject.descriptive
+        desc_index = desc_df.loc[desc_df['descriptor'] == 'Type'].index[0]
+        value = desc_df.iloc[desc_index, 1].strip(" ")
+        descriptive[j]['type'] = value
+        desc_index = desc_df.loc[desc_df['descriptor'] == 'Class'].index[0]
+        value = desc_df.iloc[desc_index, 1].strip(" ")
+        descriptive[j]['class'] = value
+        if 'Subclass' in desc_df['descriptor'].values and desc_df.iloc[desc_index, 1].strip(" ") != 'None':
+            desc_index = desc_df.loc[desc_df['descriptor'] == 'Subclass'].index[0]
+            value = desc_df.iloc[desc_index, 1].strip(" ")
+            descriptive[j]['subclass'] = value
+
+    strings = []
+    for i in descriptive:
+        string = ""
+        string += 'Type: ' + i['type'] + '\n'
+        string += 'Class: ' + i['class'] + '\n'
+        if 'subclass' in i:
+            string += 'Subclass: ' + i['subclass']
+        strings.append(string)
+
     """
     axes.scatter(x=dataset[0], y=dataset[1], c=clusters.labels_, cmap="tab20")
     axes.scatter(x=cx, y=cy, marker="x", color="black", s=50)
@@ -88,6 +114,7 @@ def plot2D(dataset, clusters, embedded=False):
                                           colorscale='Portland',
                                           showscale=True
                                       ),
+                                      text=strings
                                       ))
     fig.add_trace(
         go.Scattergl(x=cx, y=cy, mode='markers', text=clusters.labels_, showlegend=False, name='Cluster Center',

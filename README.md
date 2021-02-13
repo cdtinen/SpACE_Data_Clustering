@@ -10,3 +10,7 @@ spectra for thousands of substances measured in a variety of different laborator
 is preprocessed, then two normalization techniques may be applied prior to clustering. The
 option to select subsets of the data and get results from the intermediary phases of analysis
 is included. After clustering, the user may view a 2D or 3D plot of either algorithm's results, and save the results.
+
+Below is a screenshot after analyzing a subset of ECOSTRESS data.
+
+![SpACE Final Version](https://i.imgur.com/y8IzTFP.png "SpACE Final Version")
